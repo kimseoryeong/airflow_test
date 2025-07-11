@@ -53,7 +53,7 @@ with DAG(
     send_email_task = EmailOperator(
         task_id='send_email_alert',
         to='srkim@zenithcloud.com',
-        subject='{{ execution_date.in_timezone("Asia/Seoul") | ds }} ETL 실패 로그 알림',
+        subject='{{ logical_date.in_timezone("Asia/Seoul") | ds }} ETL 실패 로그 알림',
         html_content="""
         {{ ti.xcom_pull(task_ids='check_fail_db_logs') }}
         """,
