@@ -12,10 +12,6 @@ with DAG(
     schedule='0 8 1 * *',  # 매월 1일 오전 8시
     start_date=pendulum.datetime(2023, 3, 1, tz='Asia/Seoul'),
     catchup=False,
-    default_args={
-        'retries': 1,
-        'retry_delay': timedelta(minutes=3),
-    },
     tags=['alert', 'email'],
 ) as dag:
 
