@@ -60,9 +60,10 @@ with DAG(
     # )
     send_email_alert = EmailOperator(
         task_id="send_email_alert",
+        conn_id="smtp_default",
         to="srkim@zenithcloud.com",
-        subject="{{ ti.xcom_pull(task_ids='check_fail_db_logs')['subject'] }} ETL 실패 로그 알림",
-        html_content="{{ ti.xcom_pull(task_ids='check_fail_db_logs')['html'] }}",
+        subject="Airflow 테스트",
+        html_content="Airflow 작업이 완료되었습니다.",
     )
 
     check_fail_logs() >> send_email_alert
