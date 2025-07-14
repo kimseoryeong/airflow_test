@@ -9,7 +9,7 @@ import logging
 
 with DAG(
     dag_id='check_fail_logs_and_email',
-    schedule='17 11 * * *',  # 매월 1일 오전 8시
+    schedule='30 11 * * *',
     start_date=pendulum.datetime(2023, 3, 1, tz='Asia/Seoul'),
     catchup=False,
     tags=['alert', 'email'],
