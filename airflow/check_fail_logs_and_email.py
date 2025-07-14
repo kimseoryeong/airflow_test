@@ -59,6 +59,5 @@ with DAG(
         """,
     )
 
-    # 태스크 흐름 정의
-    fail_check_result = check_fail_logs()
-    fail_check_result >> send_email_task
+
+    check_fail_logs() >> send_email_task
