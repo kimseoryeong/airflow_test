@@ -62,8 +62,10 @@ with DAG(
         task_id="send_email_alert",
         conn_id="smtp_default",
         to="srkim@zenithcloud.com",
-        subject='{{ dag_run.logical_date.in_timezone("Asia/Seoul") | ds }} ETL 실패 로그 알림',
-        html_content='{{ ti.xcom_pull(task_ids="check_fail_db_logs") }}',
+        subject='{{data_interval_end.in_timezone("Asia/Seoul") | ds}}  ETL 실패 로그 알림',
+        html_content='{{data_interval_end.in_timezone("Asia/Seoul") | ds}} 처리결과는 <br> \ '
+                     '{{ ti.xcom_pull(task_ids="check_fail_db_logs") }}<br>'
+
     )
 
     check_fail_logs() >> send_email_alert
