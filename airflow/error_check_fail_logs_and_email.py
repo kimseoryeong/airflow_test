@@ -48,20 +48,13 @@ with DAG(
 
         return html_msg
 
-    @task(task_id="send_email_alert")
-    def send_email_alert():
-        context = get_current_context()
-        ti = context["ti"]
-        html_msg = ti.xcom_pull(task_ids="check_fail_db_logs")
-        logical_date = context["dag_run"].logical_date.in_timezone("Asia/Seoul")
-        subject = f"{logical_date.strftime('%Y-%m-%d')} ETL 실패 로그 알림"
+    # 이메일 전송 태스크 (EmailOperator를 직접 DAG에 포함)
+    send_email_alert = EmailOperator(
+        task_id="send_email_alert",
+        to="srkim@zenithcloud.com",
+        subject="{{ dag_run.logical_date.in_timezone('Asia/Seoul').strftime('%Y-%m-%d') }} ETL 실패 로그 알림",
+        html_content="{{ ti.xcom_pull(task_ids='check_fail_db_logs') }}",
+    )
 
-        email = EmailOperator(
-            task_id="send_email_inner",
-            to="srkim@zenithcloud.com",
-            subject=subject,
-            html_content=html_msg,
-        )
-        email.execute(context)
-
-    check_fail_logs() >> send_email_alert()
+    # task 연결
+    check_fail_logs() >> send_email_alert
