@@ -10,7 +10,7 @@ import psycopg2
 import logging
 
 with DAG(
-    dag_id='check_fail_logs_and_email',
+    dag_id='error_check_fail_logs_and_email',
     schedule='0 8 1 * *',
     start_date=pendulum.datetime(2023, 3, 1, tz='Asia/Seoul'),
     catchup=False,
