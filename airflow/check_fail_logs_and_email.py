@@ -50,14 +50,19 @@ with DAG(
         return html_msg  # ✅ XCom으로 메시지 전달
 
     # 이메일 전송 태스크
-    send_email_task = EmailOperator(
-        task_id='send_email_alert',
-        to='srkim@zenithcloud.com',
-        subject='{{ dag_run.logical_date.astimezone(pytz.timezone("Asia/Seoul")).strftime("%Y-%m-%d") }} ETL 실패 로그 알림',
-        html_content="""
-        {{ ti.xcom_pull(task_ids='check_fail_db_logs') }}
-        """,
+    # send_email_alert = EmailOperator(
+    #     task_id='send_email_alert',
+    #     to='srkim@zenithcloud.com',
+    #     subject='{{ dag_run.logical_date.astimezone(pytz.timezone("Asia/Seoul")).strftime("%Y-%m-%d") }} ETL 실패 로그 알림',
+    #     html_content="""
+    #     {{ ti.xcom_pull(task_ids='check_fail_db_logs') }}
+    #     """,
+    # )
+    send_email_alert = EmailOperator(
+        task_id="send_email_alert",
+        to="srkim@zenithcloud.com",
+        subject="{{ ti.xcom_pull(task_ids='check_fail_db_logs')['subject'] }} ETL 실패 로그 알림",
+        html_content="{{ ti.xcom_pull(task_ids='check_fail_db_logs')['html'] }}",
     )
 
-
-    check_fail_logs() >> send_email_task
+    check_fail_logs() >> send_email_alert
